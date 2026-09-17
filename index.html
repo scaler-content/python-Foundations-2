@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 2 Post-Read · Operators</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stock:#E7E0CC;
+    --stock-face:#FBF8EF;
+    --ink:#2B2620;
+    --ink-soft:#5B5347;
+    --tab-red:#A8382E;
+    --tab-teal:#3E6E62;
+    --tab-mustard:#B8842A;
+    --line:#D8CFB4;
+    --good:#3E6E62;
+    --bad:#A8382E;
+    --shadow: 3px 4px 0 rgba(43,38,32,0.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--stock);
+    background-image: radial-gradient(rgba(43,38,32,0.03) 1px, transparent 1px);
+    background-size: 14px 14px;
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+    padding:0 0 80px;
+  }
+  code, .mono{ font-family:'IBM Plex Mono', monospace; }
+  h1,h2,h3,.tab-label{ font-family:'Special Elite', 'IBM Plex Mono', monospace; font-weight:400; letter-spacing:0.01em; }
+  .wrap{ max-width:720px; margin:0 auto; padding:0 20px; }
+
+  header.masthead{ padding:52px 20px 28px; max-width:720px; margin:0 auto; }
+  header.masthead .kicker{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:var(--ink-soft); margin:0 0 10px; }
+  header.masthead h1{ font-size:2.1rem; margin:0 0 6px; line-height:1.25; }
+  header.masthead p.sub{ color:var(--ink-soft); font-size:1.02rem; max-width:56ch; margin:0; }
+
+  .legend{ display:flex; flex-wrap:wrap; gap:10px 18px; margin:22px 0 0; padding:14px 16px; background:var(--stock-face); border:1px solid var(--line); font-size:0.86rem; color:var(--ink-soft); }
+  .legend span{white-space:nowrap;}
+
+  .scope{ margin:34px auto 46px; max-width:720px; padding:20px 20px 20px 22px; background:var(--stock-face); border-left:5px solid var(--tab-red); box-shadow:var(--shadow); }
+  .scope h2{ font-size:1rem; margin:0 0 8px; color:var(--tab-red); }
+  .scope p{margin:0; color:var(--ink);}
+
+  .card{ position:relative; max-width:720px; margin:0 auto 40px; background:var(--stock-face); border:1px solid var(--line); box-shadow:var(--shadow); }
+  .card-tab{ position:absolute; top:-16px; left:24px; padding:5px 12px; color:#fff; font-size:0.82rem; font-family:'IBM Plex Mono', monospace; box-shadow: 2px 2px 0 rgba(43,38,32,0.18); }
+  .card-body{ padding:34px 26px 26px; }
+  .card h3{ font-size:1.28rem; margin:0 0 14px; }
+  .card p{margin:0 0 14px;}
+  .card p:last-child{margin-bottom:0;}
+
+  .analogy, .takeaway, .note{ padding:14px 16px; margin:16px 0; font-size:0.95rem; }
+  .analogy{ background:#F2ECD8; border:1px dashed var(--tab-mustard); }
+  .analogy .label{font-weight:600; color:var(--tab-mustard); font-size:0.8rem; font-family:'IBM Plex Mono',monospace; margin-bottom:4px; display:block;}
+  .takeaway{ background:#EAF1EE; border-left:4px solid var(--tab-teal); }
+  .takeaway .label{font-weight:600; color:var(--tab-teal); font-size:0.8rem; font-family:'IBM Plex Mono',monospace; margin-bottom:4px; display:block;}
+  .note{ background:#F6E9E7; border-left:4px solid var(--tab-red); }
+  .note .label{font-weight:600; color:var(--tab-red); font-size:0.8rem; font-family:'IBM Plex Mono',monospace; margin-bottom:4px; display:block;}
+
+  pre{ background:#26221D; color:#EDE6D2; padding:14px 16px; overflow-x:auto; font-size:0.88rem; margin:14px 0; line-height:1.5; }
+  pre .out{color:#8FBBA9;}
+
+  details.predict{ margin:16px 0; border:1px solid var(--line); background:#fff; }
+  details.predict summary{ cursor:pointer; padding:12px 14px; font-family:'IBM Plex Mono', monospace; font-size:0.88rem; color:var(--tab-teal); list-style:none; display:flex; align-items:center; gap:8px; }
+  details.predict summary::-webkit-details-marker{display:none;}
+  details.predict summary::before{ content:"▸"; display:inline-block; transition:transform 0.15s ease; }
+  details.predict[open] summary::before{ transform:rotate(90deg); }
+  details.predict .reveal{ padding:0 14px 16px; border-top:1px solid var(--line); padding-top:12px; }
+
+  table{ width:100%; border-collapse:collapse; margin:16px 0; font-size:0.92rem; }
+  th, td{ text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:var(--ink-soft); font-weight:600; border-bottom:2px solid var(--ink); }
+  td code{font-size:0.88rem;}
+  table.truth th, table.truth td{ text-align:center; }
+
+  .vote-box{ border:1px solid var(--line); background:#fff; padding:16px; margin:16px 0; }
+  .vote-btns{display:flex; gap:10px; margin:10px 0;}
+  .vote-btns button{ flex:1; font-family:'IBM Plex Mono', monospace; padding:10px; background:var(--stock); border:1px solid var(--ink); cursor:pointer; font-size:0.9rem; }
+  .vote-btns button:hover{background:var(--ink); color:var(--stock-face);}
+  .vote-tally{font-size:0.82rem; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+  .vote-result{display:none; margin-top:12px;}
+  .vote-result.show{display:block;}
+
+  .terms-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; margin-top:8px; }
+  .flip{ perspective:800px; height:110px; cursor:pointer; }
+  .flip-inner{ position:relative; width:100%; height:100%; transition:transform 0.5s; transform-style:preserve-3d; }
+  .flip.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{ position:absolute; width:100%; height:100%; backface-visibility:hidden; border:1px solid var(--ink); display:flex; align-items:center; justify-content:center; text-align:center; padding:10px; font-size:0.85rem; }
+  .flip-front{ background:var(--stock-face); font-family:'IBM Plex Mono', monospace; font-weight:600; }
+  .flip-back{ background:var(--ink); color:var(--stock-face); transform:rotateY(180deg); font-size:0.76rem; line-height:1.4; }
+
+  .qlist{margin:14px 0; padding-left:22px;}
+  .qlist li{margin-bottom:8px;}
+
+  /* precedence pyramid */
+  .pyramid{ margin:20px 0; display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .pyramid .tier{
+    color:#fff; font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    padding:8px 10px; text-align:center;
+  }
+  .pyramid .tier span.n{opacity:0.7; margin-right:6px;}
+
+  /* number line */
+  .numline-wrap{ margin:16px 0; overflow-x:auto; }
+
+  /* precedence quiz */
+  .prec-item{ border:1px solid var(--line); padding:14px; margin:12px 0; background:#fff; }
+  .prec-expr{ font-family:'IBM Plex Mono', monospace; font-size:1rem; margin-bottom:10px; }
+  .prec-btns{display:flex; gap:8px; flex-wrap:wrap;}
+  .prec-btns button{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; padding:7px 12px; background:var(--stock); border:1px solid var(--ink); color:var(--ink); cursor:pointer; }
+  .prec-btns button:hover{background:var(--ink); color:var(--stock-face);}
+  .prec-feedback{ margin-top:10px; font-size:0.9rem; display:none; padding:8px 10px; }
+  .prec-feedback.correct{display:block; background:#EAF1EE; color:var(--good); border-left:3px solid var(--good);}
+  .prec-feedback.wrong{display:block; background:#F6E9E7; color:var(--bad); border-left:3px solid var(--bad);}
+
+  footer.endcap{ max-width:720px; margin:20px auto 0; padding:18px 20px; text-align:center; color:var(--ink-soft); font-size:0.84rem; }
+
+  @media (max-width: 600px){
+    header.masthead h1{font-size:1.6rem;}
+    .card-body{padding:30px 18px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <p class="kicker">DSML · Post-Read · Class 2</p>
+  <h1>Operators</h1>
+  <p class="sub">A card-by-card walkthrough to lock in what we covered — commit to a guess at each 🔮 before you tap to reveal, same as we did live.</p>
+  <div class="legend">
+    <span>🔮 predict before revealing</span>
+    <span>💬 debrief</span>
+    <span>🤖 AI moment</span>
+    <span>✅ takeaway</span>
+  </div>
+</header>
+
+<div class="scope">
+  <h2>What this post-read covers</h2>
+  <p>Arithmetic, comparison, logical, and assignment operators; the difference between <code>=</code> and <code>==</code>; and operator precedence — the order Python follows when an expression mixes several operators.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- CARD: overview -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">01 · operators, the idea</div>
+    <div class="card-body">
+      <h3>What can we actually do with data?</h3>
+      <p>Storing data in a variable is only the beginning. To add two numbers, check if someone's old enough, or combine two conditions, we need <strong>operators</strong> — a symbol or keyword that tells Python to perform an operation.</p>
+      <p>Python groups them into six families: <strong>arithmetic</strong>, <strong>comparison</strong>, <strong>logical</strong>, <strong>assignment</strong>, <strong>membership</strong>, and <strong>identity</strong>. This post-read walks through arithmetic, comparison, logical, assignment, and precedence in the same order we covered them in class.</p>
+    </div>
+  </div>
+
+  <!-- CARD: arithmetic -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">02 · arithmetic</div>
+    <div class="card-body">
+      <h3>The operators you already half-know</h3>
+      <table>
+        <tr><th>Operator</th><th>Name</th><th>Example</th><th>Result</th></tr>
+        <tr><td><code>+</code></td><td>Addition</td><td><code>10 + 3</code></td><td>13</td></tr>
+        <tr><td><code>-</code></td><td>Subtraction</td><td><code>10 - 3</code></td><td>7</td></tr>
+        <tr><td><code>*</code></td><td>Multiplication</td><td><code>10 * 3</code></td><td>30</td></tr>
+        <tr><td><code>/</code></td><td>Division</td><td><code>10 / 3</code></td><td>3.333...</td></tr>
+        <tr><td><code>//</code></td><td>Floor division</td><td><code>10 // 3</code></td><td>3</td></tr>
+        <tr><td><code>%</code></td><td>Modulus</td><td><code>10 % 3</code></td><td>1</td></tr>
+        <tr><td><code>**</code></td><td>Exponentiation</td><td><code>10 ** 3</code></td><td>1000</td></tr>
+      </table>
+
+      <details class="predict">
+        <summary>🔮 Predict each line before revealing — write your own guesses first</summary>
+        <div class="reveal">
+<pre>a = 10
+b = 3
+print(a + b)
+print(a / b)
+print(a // b)
+print(a % b)
+
+<span class="out">13
+3.333333...
+3
+1</span></pre>
+          <p>💬 <code>a / b</code> and <code>a // b</code> are usually where guesses split first — regular division keeps the decimal, floor division throws it away.</p>
+        </div>
+      </details>
+
+      <div class="analogy">
+        <span class="label">Analogy — floor &amp; modulus</span>
+        Think of <code>10 // 3</code> as "how many full groups of 3 fit inside 10?" — the answer is 3 groups. <code>10 % 3</code> is "what's left over after making those groups?" — 1.
+      </div>
+
+      <div class="numline-wrap">
+        <svg viewBox="0 0 480 90" width="100%" height="90" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Mono, monospace">
+          <line x1="20" y1="45" x2="460" y2="45" stroke="#2B2620" stroke-width="2"/>
+          <!-- ticks at multiples of 3: 0,3,6,9 and endpoint 10 -->
+          <g stroke="#2B2620" stroke-width="2">
+            <line x1="20" y1="38" x2="20" y2="52"/>
+            <line x1="152" y1="38" x2="152" y2="52"/>
+            <line x1="284" y1="38" x2="284" y2="52"/>
+            <line x1="416" y1="38" x2="416" y2="52"/>
+          </g>
+          <text x="20" y="70" font-size="11" text-anchor="middle" fill="#5B5347">0</text>
+          <text x="152" y="70" font-size="11" text-anchor="middle" fill="#5B5347">3</text>
+          <text x="284" y="70" font-size="11" text-anchor="middle" fill="#5B5347">6</text>
+          <text x="416" y="70" font-size="11" text-anchor="middle" fill="#3E6E62" font-weight="600">9 = 3×3</text>
+          <!-- point at 10 -->
+          <circle cx="460" cy="45" r="4" fill="#A8382E"/>
+          <text x="452" y="20" font-size="11" text-anchor="end" fill="#A8382E">10</text>
+          <line x1="416" y1="45" x2="460" y2="45" stroke="#A8382E" stroke-width="3"/>
+          <text x="438" y="34" font-size="10" text-anchor="middle" fill="#A8382E">% = 1</text>
+        </svg>
+        <p style="font-size:0.82rem; color:var(--ink-soft); text-align:center; margin-top:-6px;">10 lands past the 3rd multiple of 3. <code>10 // 3</code> is the tick you land on (3); <code>10 % 3</code> is the leftover red gap (1).</p>
+      </div>
+
+      <div class="note">
+        <span class="label">Handy use</span>
+        <code>number % 2</code> equal to 0 means the number is even — this is the most common real use of modulus you'll see early on.
+      </div>
+
+      <p><strong>Mini practice</strong> — predict each line before you reveal:</p>
+      <details class="predict">
+        <summary>🔮 <code>15 + 5</code>, <code>15 - 5</code>, <code>15 * 5</code>, <code>15 / 5</code>, <code>15 // 4</code>, <code>15 % 4</code>, <code>2 ** 4</code></summary>
+        <div class="reveal">
+<pre>print(15 + 5)   <span class="out"># 20</span>
+print(15 - 5)   <span class="out"># 10</span>
+print(15 * 5)   <span class="out"># 75</span>
+print(15 / 5)   <span class="out"># 3.0</span>
+print(15 // 4)  <span class="out"># 3</span>
+print(15 % 4)   <span class="out"># 3</span>
+print(2 ** 4)   <span class="out"># 16</span></pre>
+          <p>💬 Notice <code>15 / 5</code> gives <code>3.0</code>, not <code>3</code> — regular division always returns a float, even when it divides evenly.</p>
+        </div>
+      </details>
+
+      <div class="takeaway">
+        <span class="label">✅ Takeaway</span>
+        <code>/</code> always gives a float. <code>//</code> and <code>%</code> are a pair — quotient and remainder from the same division.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: comparison -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-mustard)">03 · comparison</div>
+    <div class="card-body">
+      <h3>Operators that let programs decide</h3>
+      <table>
+        <tr><th>Operator</th><th>Meaning</th><th>Example</th></tr>
+        <tr><td><code>==</code></td><td>Equal to</td><td><code>5 == 5</code></td></tr>
+        <tr><td><code>!=</code></td><td>Not equal to</td><td><code>5 != 3</code></td></tr>
+        <tr><td><code>&gt;</code></td><td>Greater than</td><td><code>5 &gt; 3</code></td></tr>
+        <tr><td><code>&lt;</code></td><td>Less than</td><td><code>3 &lt; 5</code></td></tr>
+        <tr><td><code>&gt;=</code></td><td>Greater than or equal to</td><td><code>5 &gt;= 5</code></td></tr>
+        <tr><td><code>&lt;=</code></td><td>Less than or equal to</td><td><code>3 &lt;= 5</code></td></tr>
+      </table>
+
+      <details class="predict">
+        <summary>🔮 What kind of value does <code>10 &gt; 5</code> actually produce — a number, a word, something else?</summary>
+        <div class="reveal">
+<pre>print(10 > 5)
+print(10 < 5)
+print(10 == 10)
+print(10 != 10)
+
+<span class="out">True
+False
+True
+False</span></pre>
+          <p>💬 A comparison never gives back a number or a string — it always gives <code>True</code> or <code>False</code>. Comparison operators produce Boolean values.</p>
+        </div>
+      </details>
+
+      <p>Connecting back to Class 1:</p>
+      <pre>age = 20
+is_adult = age >= 18
+
+print(is_adult)
+
+<span class="out">True</span></pre>
+
+      <div class="takeaway">
+        <span class="label">✅ Takeaway</span>
+        Every comparison evaluates to exactly one of <code>True</code> or <code>False</code> — nothing else.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: = vs == -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">04 · = vs ==</div>
+    <div class="card-body">
+      <h3>They look almost identical. Are they?</h3>
+      <div class="vote-box">
+        <p style="margin:0 0 4px;"><strong><code>age = 20</code> and <code>age == 20</code> — same job, or different job?</strong></p>
+        <div class="vote-btns">
+          <button onclick="castVote('same')">Same job</button>
+          <button onclick="castVote('diff')">Different job</button>
+        </div>
+        <p class="vote-tally" id="voteTally"></p>
+        <div class="vote-result" id="voteResult">
+          <p>💬 Different jobs. A single <code>=</code> is <strong>assignment</strong> — <code>age = 20</code> means "put 20 into <code>age</code>." Two equal signs, <code>==</code>, is <strong>comparison</strong> — <code>age == 20</code> means "is <code>age</code> equal to 20?"</p>
+          <p style="margin:0;"><code>=</code> → assign, <code>==</code> → compare. Mixing these up is one of the most common beginner mistakes — worth a second look every time you write a condition.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: logical -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">05 · logical operators</div>
+    <div class="card-body">
+      <h3>Combining more than one condition</h3>
+      <p>To enter an exam, a student needs to be registered <em>and</em> have their ID card — two conditions, combined. Python gives us <code>and</code>, <code>or</code>, and <code>not</code> for exactly this.</p>
+
+      <details class="predict">
+        <summary>🔮 Fill in the truth table for <code>and</code> yourself, reasoning from the English word — then reveal</summary>
+        <div class="reveal">
+          <table class="truth">
+            <tr><th>A</th><th>B</th><th>A and B</th></tr>
+            <tr><td>True</td><td>True</td><td>True</td></tr>
+            <tr><td>True</td><td>False</td><td>False</td></tr>
+            <tr><td>False</td><td>True</td><td>False</td></tr>
+            <tr><td>False</td><td>False</td><td>False</td></tr>
+          </table>
+<pre>age = 20
+has_id = True
+print(age >= 18 and has_id)
+
+<span class="out">True</span></pre>
+          <p>💬 <code>and</code> means both conditions must be true.</p>
+        </div>
+      </details>
+
+      <details class="predict">
+        <summary>🔮 Now do the same for <code>or</code>, in reverse — predict, then reveal</summary>
+        <div class="reveal">
+          <table class="truth">
+            <tr><th>A</th><th>B</th><th>A or B</th></tr>
+            <tr><td>True</td><td>True</td><td>True</td></tr>
+            <tr><td>True</td><td>False</td><td>True</td></tr>
+            <tr><td>False</td><td>True</td><td>True</td></tr>
+            <tr><td>False</td><td>False</td><td>False</td></tr>
+          </table>
+<pre>has_card = False
+has_cash = True
+print(has_card or has_cash)
+
+<span class="out">True</span></pre>
+          <p>💬 <code>or</code> means at least one condition must be true.</p>
+        </div>
+      </details>
+
+      <pre>is_raining = False
+print(not is_raining)
+
+<span class="out">True</span></pre>
+      <p><code>not</code> reverses a Boolean: <code>not True → False</code>, <code>not False → True</code>.</p>
+
+      <p>Putting comparison and logical operators together:</p>
+      <pre>age = 20
+has_id = True
+
+can_enter = age >= 18 and has_id
+print(can_enter)
+
+<span class="out">True</span></pre>
+
+      <div class="note">
+        <span class="label">🤖 AI moment (optional stretch)</span>
+        Once your <code>can_enter</code> line works, ask an AI assistant for one other way to write it that gives the same result. Run its version against a few test values of <code>age</code> and <code>has_id</code> to confirm it actually matches — don't just take it on faith.
+      </div>
+
+      <div class="takeaway">
+        <span class="label">✅ Takeaway</span>
+        Comparison operators create conditions; logical operators combine conditions.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: assignment operators -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-mustard)">06 · assignment shortcuts</div>
+    <div class="card-body">
+      <h3>A shorter way to update a variable</h3>
+      <details class="predict">
+        <summary>🔮 Based on <code>=</code> and <code>==</code>, what do you think <code>+=</code> might mean?</summary>
+        <div class="reveal">
+          <p>💬 "Add and reassign" — <code>score += 5</code> means exactly the same thing as <code>score = score + 5</code>.</p>
+        </div>
+      </details>
+
+      <table>
+        <tr><th>Operator</th><th>Example</th><th>Equivalent to</th></tr>
+        <tr><td><code>=</code></td><td><code>x = 5</code></td><td>Assign 5</td></tr>
+        <tr><td><code>+=</code></td><td><code>x += 2</code></td><td><code>x = x + 2</code></td></tr>
+        <tr><td><code>-=</code></td><td><code>x -= 2</code></td><td><code>x = x - 2</code></td></tr>
+        <tr><td><code>*=</code></td><td><code>x *= 2</code></td><td><code>x = x * 2</code></td></tr>
+        <tr><td><code>/=</code></td><td><code>x /= 2</code></td><td><code>x = x / 2</code></td></tr>
+        <tr><td><code>//=</code></td><td><code>x //= 2</code></td><td><code>x = x // 2</code></td></tr>
+        <tr><td><code>%=</code></td><td><code>x %= 2</code></td><td><code>x = x % 2</code></td></tr>
+        <tr><td><code>**=</code></td><td><code>x **= 2</code></td><td><code>x = x ** 2</code></td></tr>
+      </table>
+
+      <details class="predict">
+        <summary>🔮 Predict the three printed values before revealing</summary>
+        <div class="reveal">
+<pre>score = 10
+
+score += 5
+print(score)
+
+score -= 2
+print(score)
+
+score *= 2
+print(score)
+
+<span class="out">15
+13
+26</span></pre>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- CARD: precedence -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">07 · operator precedence</div>
+    <div class="card-body">
+      <h3>What happens when an expression has several operators?</h3>
+      <div class="vote-box">
+        <p style="margin:0 0 4px;"><strong><code>result = 10 + 5 * 2</code> — does Python do <code>10+5</code> first (→ 30), or <code>5*2</code> first (→ 20)?</strong></p>
+        <div class="vote-btns">
+          <button onclick="castPrecVote('30')">30</button>
+          <button onclick="castPrecVote('20')">20</button>
+        </div>
+        <p class="vote-tally" id="precTally"></p>
+        <div class="vote-result" id="precResult">
+          <pre>result = 10 + 5 * 2
+print(result)
+
+<span class="out">20</span></pre>
+          <p>💬 Multiplication happens before addition: <code>5 * 2 = 10</code>, then <code>10 + 10 = 20</code>. This ordering is called <strong>operator precedence</strong> — higher-priority operations run first.</p>
+        </div>
+      </div>
+
+      <p>The order this course uses, highest priority first:</p>
+      <div class="pyramid">
+        <div class="tier" style="background:#A8382E; width:96%;"><span class="n">1</span>Parentheses ()</div>
+        <div class="tier" style="background:#B14B3D; width:84%;"><span class="n">2</span>Exponentiation **</div>
+        <div class="tier" style="background:#B8623E; width:72%;"><span class="n">3</span>Multiplication * / // %</div>
+        <div class="tier" style="background:#B8842A; width:60%;"><span class="n">4</span>Addition / Subtraction + -</div>
+        <div class="tier" style="background:#8E8A3E; width:48%;"><span class="n">5</span>Comparisons == != &gt; &lt; &gt;= &lt;=</div>
+        <div class="tier" style="background:#5F8956; width:36%;"><span class="n">6</span>not</div>
+        <div class="tier" style="background:#4C7A66; width:24%;"><span class="n">7</span>and</div>
+        <div class="tier" style="background:#3E6E62; width:14%;"><span class="n">8</span>or</div>
+      </div>
+
+      <div class="note">
+        <span class="label">🤖 AI moment</span>
+        If you guessed 30, paste this into an AI assistant: "I expected <code>10 + 5 * 2</code> to equal 30. Walk me through why Python gives 20 instead — don't just tell me the answer, explain the reasoning." Then prove it to yourself independently below.
+      </div>
+
+      <p>Try one more, on your own first:</p>
+      <div class="prec-item">
+        <div class="prec-expr">2 + 3 ** 2</div>
+        <div class="prec-btns">
+          <button onclick="checkPrec('11')">11</button>
+          <button onclick="checkPrec('25')">25</button>
+        </div>
+        <div class="prec-feedback" id="prec-fb"></div>
+      </div>
+
+      <p>Parentheses override all of this — they tell Python exactly what to calculate first:</p>
+      <pre>print(10 + 5 * 2)     <span class="out"># 20</span>
+print((10 + 5) * 2)   <span class="out"># 30</span></pre>
+
+      <div class="takeaway">
+        <span class="label">✅ Takeaway</span>
+        When an expression gets complicated, parentheses aren't just useful for Python — they make your code easier for humans to read too.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: practical example -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-teal)">08 · putting it together</div>
+    <div class="card-body">
+      <h3>Both classes, one program</h3>
+      <pre>score = int(input("Enter your score: "))
+
+passed = score >= 40
+excellent = score >= 90
+
+print("Passed:", passed)
+print("Excellent:", excellent)</pre>
+      <p>Notice everything at work here: <code>input()</code> to get data, <code>int()</code> to convert it, a variable to store it, <code>&gt;=</code> to compare it, Booleans to hold the result, and <code>print()</code> to show it. This is how the pieces from both classes start working together.</p>
+    </div>
+  </div>
+
+  <!-- CARD: mini challenge -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-mustard)">practice</div>
+    <div class="card-body">
+      <h3>Mini challenge</h3>
+      <p>Write a program that asks for someone's age and whether they have an ID, then decides whether they can enter an event. Rule: at least 18 <strong>and</strong> has an ID.</p>
+      <pre>age = int(input("Enter your age: "))
+has_id = input("Do you have an ID? ")
+
+# Complete the condition</pre>
+
+      <details class="predict">
+        <summary>🔮 What operator goes between the two conditions — and how would you check "has an ID" from a text answer?</summary>
+        <div class="reveal">
+<pre>age = int(input("Enter your age: "))
+has_id = input("Do you have an ID? ")
+
+can_enter = age >= 18 and has_id == "yes"
+
+print("Can enter:", can_enter)</pre>
+          <p>💬 <code>and</code> combines the two conditions, and since <code>input()</code> always returns a string, checking the answer means comparing it to the exact text <code>"yes"</code>.</p>
+        </div>
+      </details>
+
+      <div class="note">
+        <span class="label">How to approach this</span>
+        Write your own version before opening the reveal above. If it doesn't match exactly, run both and check whether they actually behave the same for a few test inputs — matching output matters more than matching wording.
+      </div>
+
+      <ol class="qlist">
+        <li>What's the difference between <code>/</code> and <code>//</code>?</li>
+        <li>What type of value does every comparison produce?</li>
+        <li>What's the difference between <code>=</code> and <code>==</code>?</li>
+        <li>When does <code>and</code> produce <code>True</code>? When does <code>or</code>?</li>
+        <li>What does <code>score += 5</code> expand to?</li>
+        <li>In <code>10 + 5 * 2</code>, which operator runs first, and why?</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- QUICK REVISION -->
+  <div class="card">
+    <div class="card-tab" style="background:var(--tab-red)">quick revision</div>
+    <div class="card-body">
+      <h3>Key terms — tap to flip</h3>
+      <div class="terms-grid" id="termsGrid"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrap">
+  <div class="note" style="max-width:720px; margin:0 auto 40px;">
+    <span class="label">Flagging a gap</span>
+    The recap in your script mentions membership operators (<code>in</code>, <code>not in</code>) and the difference between <code>is</code> and <code>==</code> — both are learning objectives — but the section covering them (it looks like a section 18, between the mini challenge and the recap) wasn't in the text you sent. I left it out rather than inventing examples that weren't in your script. Send it over and I'll add a matching card.
+  </div>
+</div>
+
+<footer class="endcap">
+  Class 2 · Operators — post-read
+</footer>
+
+<script>
+  // vote widget: = vs ==
+  let votes = {same:0, diff:0};
+  function castVote(choice){
+    votes[choice]++;
+    document.getElementById('voteTally').textContent = `Votes — same job: ${votes.same}, different job: ${votes.diff}`;
+    document.getElementById('voteResult').classList.add('show');
+  }
+
+  // vote widget: precedence
+  let pvotes = {'30':0, '20':0};
+  function castPrecVote(choice){
+    pvotes[choice]++;
+    document.getElementById('precTally').textContent = `Votes — 30: ${pvotes['30']}, 20: ${pvotes['20']}`;
+    document.getElementById('precResult').classList.add('show');
+  }
+
+  function checkPrec(choice){
+    const fb = document.getElementById('prec-fb');
+    if(choice === '11'){
+      fb.className = 'prec-feedback correct';
+      fb.textContent = 'Correct — ** runs before +, so 3 ** 2 = 9, then 2 + 9 = 11.';
+    } else {
+      fb.className = 'prec-feedback wrong';
+      fb.textContent = "Not quite — it's 11. Exponentiation (**) has higher precedence than addition, so 3 ** 2 = 9 happens first, then 2 + 9 = 11.";
+    }
+  }
+
+  // flip cards
+  const terms = [
+    {term: 'operator', def: 'A symbol or keyword that tells Python to perform an operation.'},
+    {term: 'floor division //', def: 'Division that drops the fractional part, keeping only the whole quotient.'},
+    {term: 'modulus %', def: 'The remainder left over after division.'},
+    {term: 'comparison operator', def: 'Compares two values and always produces True or False.'},
+    {term: '= vs ==', def: '= assigns a value. == asks whether two values are equal.'},
+    {term: 'and', def: 'True only when both conditions are true.'},
+    {term: 'or', def: 'True when at least one condition is true.'},
+    {term: 'not', def: 'Reverses a Boolean: True becomes False and vice versa.'},
+    {term: 'assignment shortcut', def: 'e.g. += updates a variable using its own current value, like score = score + 5.'},
+    {term: 'operator precedence', def: 'The fixed order Python uses to evaluate an expression with multiple operators.'},
+  ];
+  const grid = document.getElementById('termsGrid');
+  terms.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'flip';
+    el.innerHTML = `
+      <div class="flip-inner">
+        <div class="flip-face flip-front">${t.term}</div>
+        <div class="flip-face flip-back">${t.def}</div>
+      </div>`;
+    el.addEventListener('click', () => el.classList.toggle('flipped'));
+    grid.appendChild(el);
+  });
+</script>
+
+</body>
+</html>
